@@ -1,12 +1,8 @@
 # Open Web Evolutionary Search
 
-Codex-Native Open Web Evolutionary Search turns messy public web pages into ranked, evidence-backed candidate shortlists. The product applies an evolutionary search paradigm to the web itself: objective, expand, select, review, shortlist. This hackathon submission applies that loop to one concrete first wedge: startup program search across grants, cloud credits, and accelerators.
+Open Web Evolutionary Search is a Codex-native system for long-running autonomous agents that search the live web as a candidate space, not just a set of pages to browse and summarize. Codex app-server runs the control plane, TinyFish runs the live web execution layer, and the system turns messy sources into ranked, evidence-backed shortlists through an explicit loop: objective, expand, select, review, shortlist.
 
-## Project Description
-
-Open Web Evolutionary Search is a Codex-native system for long-running autonomous agents that need to search the live web iteratively, not just browse and summarize it once. Codex app-server runs the control plane, TinyFish runs the live web execution layer, and the system turns messy pages into a comparable candidate set that can be expanded, scored, reviewed, and shortlisted.
-
-The current wedge is startup program search. Instead of asking an agent to manually hunt through grants, cloud credit programs, and accelerators, the product searches those sources as a candidate space and returns a ranked, evidence-backed shortlist with score breakdowns, uncertainty notes, review output, and next actions.
+This hackathon submission applies that loop to one concrete first wedge: startup program search across grants, cloud credits, and accelerators. Instead of manually hunting through fragmented websites, the agent returns a comparable shortlist with score breakdowns, uncertainty notes, review output, and next actions.
 
 ## Why This Should Exist Now
 

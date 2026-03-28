@@ -2,15 +2,39 @@
 
 Codex-Native Open Web Evolutionary Search turns messy public web pages into ranked, evidence-backed candidate shortlists. The product applies an evolutionary search paradigm to the web itself: objective, expand, select, review, shortlist. This hackathon submission applies that loop to one concrete first wedge: startup program search across grants, cloud credits, and accelerators.
 
-## Executive Summary
+## Project Description
 
-This repo is a serious venture-style prototype of an open-web evolutionary search loop. Codex app-server is the primary control plane, TinyFish is the live web execution layer, and the current demo applies the loop to startup program search. Instead of a pile of tabs, the product returns a shortlist with evidence, score breakdowns, open questions, review notes, and next actions.
+Open Web Evolutionary Search is a Codex-native system for long-running autonomous agents that need to search the live web iteratively, not just browse and summarize it once. Codex app-server runs the control plane, TinyFish runs the live web execution layer, and the system turns messy pages into a comparable candidate set that can be expanded, scored, reviewed, and shortlisted.
+
+The current wedge is startup program search. Instead of asking an agent to manually hunt through grants, cloud credit programs, and accelerators, the product searches those sources as a candidate space and returns a ranked, evidence-backed shortlist with score breakdowns, uncertainty notes, review output, and next actions.
+
+## Why This Should Exist Now
+
+The aha is that autonomous agents are finally good enough to run long loops, but most web agents still stop at "browse page -> summarize page." That leaves a huge gap between research and decisions. Open Web Evolutionary Search closes that gap by combining:
+
+- Codex app-server for long-running orchestration and review
+- TinyFish for reliable live web execution
+- an explicit loop that expands candidates, normalizes them, ranks them, reviews them, and outputs a shortlist
+
+That is the part that should feel like "why didn’t this exist before now?" The product is not a better browser tab or a prettier research note. It is a decision loop over the open web.
+
+## Built During The Hackathon
+
+The hackathon deliverable is the integrated product path shown in this repo and demo:
+
+- Codex app-server orchestration for kickoff and review turns
+- TinyFish live proof integration on the pinned AWS Activate path
+- deterministic replay path for the judge-safe walkthrough
+- evidence-backed normalization, ranking, review, and export
+- the web shell and repo-local `$owes-judge-demo` operator path
 
 The submission is intentionally optimized for pairwise judging:
 
 - one completed pinned single-source live proof run for credibility and magic
 - one deterministic replay walkthrough for clarity and reliability
 - one crisp PMF wedge: startup program search
+
+Reusable scaffolding or harness ideas should be disclosed separately. The judged novelty here is the integrated Codex-native product loop over the open web.
 
 ## Not A Standard Research Agent
 

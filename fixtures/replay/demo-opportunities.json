@@ -1,0 +1,82 @@
+{
+  "capturedAt": "2026-03-28T00:00:00Z",
+  "mode": "replay",
+  "results": [
+    {
+      "sourceId": "aws-activate",
+      "rawOpportunities": [
+        {
+          "title": "AWS Activate Credits for Startups",
+          "issuer": "Amazon Web Services",
+          "source_url": "https://aws.amazon.com/startups/credits",
+          "application_url": "https://aws.amazon.com/startups/credits",
+          "source_type": "grant",
+          "reward_value_text": "Up to $100,000 in AWS credits",
+          "deadline_text": "Rolling applications",
+          "geography": "Global",
+          "eligibility_bullets": [
+            "Startup building on AWS",
+            "Program offers credits, technical support, and go-to-market resources"
+          ],
+          "summary": "AWS Activate provides cloud credits and startup support benefits for eligible founders.",
+          "evidence_snippets": [
+            "Up to $100,000 in AWS credits",
+            "Credits, technical support, and startup resources"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceId": "google-startups-cloud",
+      "rawOpportunities": [
+        {
+          "title": "Google for Startups Cloud Program",
+          "issuer": "Google Cloud",
+          "source_url": "https://cloud.google.com/startup/benefits",
+          "application_url": "https://cloud.google.com/startup/benefits",
+          "source_type": "grant",
+          "reward_value_text": "Cloud credits and technical benefits",
+          "deadline_text": "Rolling applications",
+          "geography": "Global",
+          "eligibility_bullets": [
+            "Startup using or planning to use Google Cloud",
+            "Program includes credits, training, and product support"
+          ],
+          "summary": "Google for Startups Cloud Program offers cloud credits and technical support to eligible startups.",
+          "evidence_snippets": [
+            "Cloud credits and technical support for startups",
+            "Benefits for eligible startup founders"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceId": "yc-apply",
+      "rawOpportunities": [
+        {
+          "title": "Y Combinator Startup Accelerator",
+          "issuer": "Y Combinator",
+          "source_url": "https://www.ycombinator.com/apply",
+          "application_url": "https://www.ycombinator.com/apply",
+          "source_type": "accelerator",
+          "reward_value_text": "$500,000 standard deal",
+          "deadline_text": null,
+          "geography": "Global",
+          "eligibility_bullets": [
+            "Early-stage startup founders",
+            "Application-based accelerator program"
+          ],
+          "summary": "Y Combinator runs a startup accelerator with funding, mentorship, and investor access.",
+          "evidence_snippets": [
+            "$500,000 standard deal",
+            "Apply to the startup accelerator"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceId": "grants-gov-search",
+      "rawOpportunities": []
+    }
+  ]
+}

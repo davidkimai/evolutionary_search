@@ -1,0 +1,45 @@
+{
+  "liveVerifiedAt": "2026-03-28T04:56:04Z",
+  "runId": "run_2103d888-2116-46f0-ae9b-ac9d181d070b",
+  "mode": "live",
+  "status": "completed",
+  "objective": {
+    "title": "AI startup live opportunity proof",
+    "query": "AI startup cloud credit program with explicit benefits and application details",
+    "sourceTypes": [
+      "grant"
+    ],
+    "sourceIds": [
+      "aws-activate"
+    ]
+  },
+  "source": {
+    "id": "aws-activate",
+    "label": "AWS Activate",
+    "sourceType": "grant",
+    "url": "https://aws.amazon.com/startups/credits",
+    "region": "Global"
+  },
+  "tinyfishRunId": "9fc71814-591d-4319-88d9-cce682e0dc39",
+  "tinyfishStatus": "COMPLETED",
+  "tinyfishStartedAt": "2026-03-28T04:55:29Z",
+  "tinyfishFinishedAt": "2026-03-28T04:56:03Z",
+  "opportunityCount": 1,
+  "topOpportunity": {
+    "title": "AWS Activate Credits",
+    "issuer": "Amazon Web Services (AWS)",
+    "score": 0.5540010856819215,
+    "confidence": 0.89,
+    "fitReason": "clear value signal (Up to $100,000 in AWS Activate Credits); application path is explicit",
+    "evidenceSnippets": [
+      "Eligible startups can apply to receive up to $100,000 in credits to build, grow, and scale.",
+      "Activate Portfolio offers up to $100,000 USD AWS Activate Credits for startups associated with an Activate Provider",
+      "AWS Activate Credits are redeemable on third-party models on Amazon Bedrock",
+      "To be eligible for AWS Activate Credits, startups must be pre-series B, have a company website or company profile, be founded in the last 10 years and have an AWS Account on Paid Tier Plan."
+    ],
+    "applicationLink": "https://aws.amazon.com/startups/sign-up?referrer_url_path=/startups/credits"
+  },
+  "uncertaintyNotes": [
+    "Deadline evidence is missing."
+  ]
+}

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Open Web Evolutionary Search</title>
+    <link rel="stylesheet" href="/public/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <p class="eyebrow">Codex-Native Open Web Evolutionary Search</p>
+        <h1>Turn the open web into ranked, evidence-backed opportunities.</h1>
+        <p class="lede">First wedge: startup opportunity discovery. Codex app-server runs the search loop, TinyFish handles live web execution, and replay guarantees the judge-safe shortlist.</p>
+        <div class="loop-strip" aria-label="Evolutionary search loop">
+          <span>Objective</span>
+          <span>Expand</span>
+          <span>Select</span>
+          <span>Review</span>
+          <span>Shortlist</span>
+        </div>
+        <p class="hero-note"><strong>Judge path:</strong> 1. Live TinyFish proof 2. Judge-safe replay 3. Review shortlist 4. Export dossier</p>
+        <div class="hero-actions">
+          <button id="runLiveProofButton" class="primary">Run Live TinyFish Proof</button>
+          <button id="runReplayButton" class="primary">Run Judge-Safe Replay</button>
+          <button id="refreshButton" class="secondary">Refresh Runs</button>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="panel form-panel">
+          <details class="custom-search">
+            <summary>Custom Search (Optional)</summary>
+            <p class="muted custom-note">Secondary operator controls. For judges, use the two primary buttons above.</p>
+            <form id="runForm">
+            <label>
+              Title
+              <input name="title" value="AI startup opportunity search" required />
+            </label>
+            <label>
+              Query
+              <textarea name="query" required>AI startup credits and accelerator programs</textarea>
+            </label>
+            <label>
+              Profile
+              <textarea name="profile" required>Seed-stage startup building AI developer tools with a small engineering team.</textarea>
+            </label>
+            <div class="grid-two">
+              <label>
+                Geography
+                <input name="geography" value="Global" required />
+              </label>
+              <label>
+                Execution Mode
+                <select name="mode">
+                  <option value="replay">Deterministic Replay</option>
+                  <option value="live">Live TinyFish Proof</option>
+                </select>
+              </label>
+            </div>
+            <label>
+              Sectors
+              <input name="sectors" value="AI, developer tools, cloud" />
+            </label>
+            <label>
+              Constraints
+              <input name="constraints" value="Prefer programs with explicit application or benefit details" />
+            </label>
+            <input type="hidden" name="fixtureId" value="demo-opportunities" />
+            <button type="submit" class="primary wide">Start Search</button>
+            </form>
+          </details>
+        </section>
+
+        <section class="panel runs-panel">
+          <div class="panel-header">
+            <h2>Runs</h2>
+            <span id="runCount" class="pill">0</span>
+          </div>
+          <div id="runsList" class="runs-list"></div>
+        </section>
+
+        <section class="panel detail-panel">
+          <div class="panel-header detail-header">
+            <div>
+              <h2 id="detailTitle">No run selected</h2>
+              <p id="detailMeta" class="muted">Start with the live TinyFish proof, then run the judge-safe replay.</p>
+            </div>
+            <div class="detail-actions">
+              <button id="reviewButton" class="secondary" disabled>Review Shortlist</button>
+              <a id="exportLink" class="secondary disabled" href="#">Export Dossier</a>
+            </div>
+          </div>
+          <div id="detailBody" class="detail-body empty-state">
+            App-server events, opportunities, and score breakdowns will appear here.
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/public/app.js"></script>
+  </body>
+</html>

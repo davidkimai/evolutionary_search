@@ -1,0 +1,78 @@
+{
+  "results": [
+    {
+      "sourceId": "aws-activate",
+      "rawOpportunities": [
+        {
+          "title": "AWS Activate Credits",
+          "issuer": "Amazon Web Services (AWS)",
+          "source_url": "https://aws.amazon.com/startups/credits",
+          "application_url": "https://aws.amazon.com/startups/sign-up?referrer_url_path=/startups/credits",
+          "source_type": "grant",
+          "reward_value_text": "Up to $100,000 in AWS Activate Credits",
+          "deadline_text": null,
+          "geography": "Global",
+          "eligibility_bullets": [
+            "Pre-series B",
+            "Company website or company profile",
+            "Founded in the last 10 years",
+            "AWS Account on a Paid Tier Plan",
+            "For Activate Portfolio: Associated with an Activate Provider (e.g., VC or Investor) and have an Organizational ID"
+          ],
+          "summary": "AWS Activate provides startups with up to $100,000 in credits to build, grow, and scale. For AI startups, these credits are specifically redeemable on third-party foundation models from companies like Anthropic, Meta, and Mistral AI via Amazon Bedrock.",
+          "evidence_snippets": [
+            "Eligible startups can apply to receive up to $100,000 in credits to build, grow, and scale.",
+            "Activate Portfolio offers up to $100,000 USD AWS Activate Credits for startups associated with an Activate Provider",
+            "AWS Activate Credits are redeemable on third-party models on Amazon Bedrock",
+            "To be eligible for AWS Activate Credits, startups must be pre-series B, have a company website or company profile, be founded in the last 10 years and have an AWS Account on Paid Tier Plan."
+          ]
+        }
+      ],
+      "rawEventLog": [
+        {
+          "run_id": "9fc71814-591d-4319-88d9-cce682e0dc39",
+          "status": "COMPLETED",
+          "goal": "Navigate to https://aws.amazon.com/startups/credits to complete the goal: # TinyFish Goal Template\n\nUse strict JSON output.\n\nTemplate:\n\nYou are extracting current opportunities from the given website.\nReturn strict JSON only.\nSchema:\n[\n  {\n    \"title\": \"string\",\n    \"issuer\": \"string | null\",\n    \"source_url\": \"string\",\n    \"application_url\": \"string | null\",\n    \"source_type\": \"grant | accelerator | tender | other\",\n    \"reward_value_text\": \"string | null\",\n    \"deadline_text\": \"string | null\",\n    \"geography\": \"string | null\",\n    \"eligibility_bullets\": [\"string\"],\n    \"summary\": \"string | null\",\n    \"evidence_snippets\": [\"string\"]\n  }\n]\n\nRules:\n- if unknown, use null\n- do not fabricate amounts or deadlines\n- keep evidence snippets short and literal\n\nObjective title: AI startup live opportunity proof\n\nObjective query: AI startup cloud credit program with explicit benefits and application details\n\nProfile: Seed-stage startup building AI developer tools with a small engineering team.\n\nPreferred geography: Global\n\nSectors: AI, developer tools, cloud\n\nConstraints: Prefer explicit credit amounts, benefits, and application details\n\nSource label: AWS Activate\n\nSource type: grant\n\nSource URL: https://aws.amazon.com/startups/credits\n\nOnly return opportunities that are relevant to the objective and supported by literal evidence snippets from the source.",
+          "created_at": "2026-03-28T04:55:19Z",
+          "started_at": "2026-03-28T04:55:29Z",
+          "finished_at": "2026-03-28T04:56:03Z",
+          "num_of_steps": 3,
+          "result": {
+            "result": [
+              {
+                "title": "AWS Activate Credits",
+                "issuer": "Amazon Web Services (AWS)",
+                "summary": "AWS Activate provides startups with up to $100,000 in credits to build, grow, and scale. For AI startups, these credits are specifically redeemable on third-party foundation models from companies like Anthropic, Meta, and Mistral AI via Amazon Bedrock.",
+                "geography": "Global",
+                "source_url": "https://aws.amazon.com/startups/credits",
+                "source_type": "grant",
+                "deadline_text": null,
+                "application_url": "https://aws.amazon.com/startups/sign-up?referrer_url_path=/startups/credits",
+                "evidence_snippets": [
+                  "Eligible startups can apply to receive up to $100,000 in credits to build, grow, and scale.",
+                  "Activate Portfolio offers up to $100,000 USD AWS Activate Credits for startups associated with an Activate Provider",
+                  "AWS Activate Credits are redeemable on third-party models on Amazon Bedrock",
+                  "To be eligible for AWS Activate Credits, startups must be pre-series B, have a company website or company profile, be founded in the last 10 years and have an AWS Account on Paid Tier Plan."
+                ],
+                "reward_value_text": "Up to $100,000 in AWS Activate Credits",
+                "eligibility_bullets": [
+                  "Pre-series B",
+                  "Company website or company profile",
+                  "Founded in the last 10 years",
+                  "AWS Account on a Paid Tier Plan",
+                  "For Activate Portfolio: Associated with an Activate Provider (e.g., VC or Investor) and have an Organizational ID"
+                ]
+              }
+            ]
+          },
+          "error": null,
+          "streaming_url": "https://ip-18-144-33-15.tetra-data.production.tinyfish.io/tf-ecef0805-e05e-4979-a582-1d950181b9f9/stream/0",
+          "browser_config": {
+            "proxy_enabled": false,
+            "proxy_country_code": null
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -6,25 +6,29 @@ In pairwise judging, immediate clarity beats breadth. The demo should feel like 
 
 1. one real live TinyFish proof for credibility and magic
 2. one deterministic replay walkthrough for clarity and comparison
-3. one crisp PMF wedge: startup opportunity discovery
+3. one crisp PMF wedge: startup program search
 
 ## Preferred Operator Path
 
-Use the repo-local demo skill so the operator path stays standardized:
+Use the repo-local demo skill inside Codex so the operator path stays standardized and the demo stays inside one judged surface. Inside the Codex macOS app, default to a screenshot-backed walkthrough from the same web UI. Use headed browser mode only when explicitly requested or when rehearsing locally:
 
 ```text
-$owes-judge-demo Run the visual judge demo for this repo in the web UI: verify the app is running, do the Live TinyFish Proof first, then the Judge-Safe Replay, and narrate the ranked evidence-backed shortlist.
+$owes-judge-demo Run the visual judge demo for this repo in the Codex macOS app as a screenshot-backed walkthrough from the web UI. Verify the app is running, preflight TinyFish status, do the Live TinyFish Proof first, then the Judge-Safe Replay, capture step-by-step visuals, verify review and export, and narrate the ranked evidence-backed shortlist. Use headed browser mode only if explicitly requested.
 ```
 
 Replay-only fallback:
 
 ```text
-$owes-judge-demo Run the replay-only visual judge demo for this repo in the web UI: verify the app is running, skip live proof if unavailable, do the Judge-Safe Replay, and narrate the ranked evidence-backed shortlist.
+$owes-judge-demo Run the replay-only visual judge demo for this repo in the Codex macOS app as a screenshot-backed walkthrough from the web UI. Verify the app is running, skip live proof if unavailable, do the Judge-Safe Replay, capture step-by-step visuals, verify review and export, and narrate the ranked evidence-backed shortlist. Use headed browser mode only if explicitly requested.
 ```
 
 Why use the skill:
 
 - it verifies or starts the local app before the demo
+- it can preflight `/v1/providers/status` so the live TinyFish proof does not fail on missing credentials
+- it keeps the judged flow in one surface inside Codex
+- it captures persistent visual artifacts at each major step
+- it still supports headed local browser mode when explicitly useful
 - it directs the operator to `http://127.0.0.1:4317`
 - it keeps the visual flow on the two primary buttons
 - it reduces operator error under judge pressure
@@ -36,7 +40,10 @@ Why use the skill:
 Show only the hero strip and primary buttons.
 
 Say:
-"The best startup opportunities live on messy websites, not in a clean database. We built Codex-Native Open Web Evolutionary Search to turn the open web into a ranked, evidence-backed shortlist."
+"The best startup programs live on messy websites, not in a clean database. We built Codex-Native Open Web Evolutionary Search: a loop that turns messy web sources into a ranked, evidence-backed shortlist."
+
+If needed, add one sentence:
+"This is not a standard research agent returning notes. It turns the web into a comparable candidate space and produces a shortlist."
 
 ### 0:20-0:40 — Two-Move Setup
 
@@ -44,6 +51,9 @@ Point to the two primary buttons.
 
 Say:
 "This demo has two proof points. First, one real live TinyFish proof. Second, a deterministic replay that shows the full shortlist safely."
+
+Optional operator preflight before judges arrive:
+- confirm `/v1/providers/status` reports `tinyfishApiConfigured: true` if you intend to click the live proof button
 
 ### 0:40-1:25 — Live TinyFish Proof
 
@@ -80,7 +90,7 @@ Say:
 Show the replay shortlist first, not the runtime section.
 
 Say:
-"Here the system expands across multiple opportunity sources, normalizes messy evidence, and returns a ranked shortlist instead of a pile of tabs."
+"Here the system expands across multiple web sources inside the startup-program wedge, normalizes messy evidence, and returns a ranked shortlist instead of a pile of tabs."
 
 Point to:
 - ranked shortlist
@@ -104,7 +114,7 @@ Say:
 ### 3:40-4:00 — Close
 
 Say:
-"The wedge is startup opportunity discovery. The broader frame is Open Web Evolutionary Search: messy web in, evidence-backed shortlist out."
+"The wedge is startup program search. The broader frame is Open Web Evolutionary Search: objective in, web candidates expanded and reviewed, shortlist out."
 
 ## 60-Second Compression
 
@@ -126,10 +136,13 @@ Say:
   - "Any reusable harness or scaffolding should be disclosed separately. We keep the judged novelty focused on the integrated product flow shown in the demo."
 - `Why is this venture-scale and not just a cool demo?`
   - "Teams already waste time hunting fragmented opportunities manually. This product compresses that into a ranked shortlist with evidence and next actions."
+- `How is this different from a deep research agent?`
+  - "A research agent usually returns notes. We build a candidate space, normalize it into comparable records, rank it, review it, and export a decision-ready shortlist."
 
 ## Presenter Notes
 
 - The preferred operator path is the `$owes-judge-demo` skill, not manual improvisation.
+- If live proof is part of the demo, preflight `/v1/providers/status` before judges arrive so missing TinyFish auth does not become an avoidable table failure.
 - Do not start in the custom form.
 - Do not explain config, CLI, or environment variables unless asked.
 - Do not broaden to procurement or other verticals in the main pitch.

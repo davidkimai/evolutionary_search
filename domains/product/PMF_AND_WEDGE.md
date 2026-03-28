@@ -2,7 +2,7 @@
 
 ## Main insight
 
-The wedge remains opportunity discovery because:
+The first wedge remains startup program search because:
 - judges can understand it fast
 - it has clear economic value
 - it demonstrates a massive positive use case
@@ -14,19 +14,16 @@ The wedge remains opportunity discovery because:
 Open Web Evolutionary Search
 
 ### First wedge
-Opportunity discovery:
+Startup program search:
 - grants
+- cloud credit programs
 - accelerators
-- tenders
 
-### Expansion paths
-- procurement intelligence
-- competitive / regulatory sentries
-- care / trial matching
-- supplier / vendor discovery
+### Generalization path
+The same loop can extend to other messy, high-value web decision spaces. For the submission, keep the public story anchored on startup program search and treat cross-domain generalization as an architectural property, not a second demo.
 
 ## Judge-friendly wording
 
 Use this phrase repeatedly:
 
-> We built a codex-native evolutionary search system over the open web. For the hackathon, we focused it on high-value opportunity discovery.
+> We built a Codex-native evolutionary search system over the open web. For the hackathon, we focused the first wedge on startup program search.

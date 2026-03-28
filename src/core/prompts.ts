@@ -20,15 +20,21 @@ export function buildTinyfishGoal(source: SourceDefinition, objective: Objective
 
   return [
     promptAssets.tinyfishGoalTemplate,
-    `Objective title: ${objective.title}`,
-    `Objective query: ${objective.query}`,
-    `Profile: ${objective.profile}`,
-    `Preferred geography: ${objective.geography}`,
-    `Sectors: ${sectorText}`,
-    `Constraints: ${constraintText}`,
-    `Source label: ${source.label}`,
-    `Source type: ${source.sourceType}`,
-    `Source URL: ${source.url}`,
-    "Only return opportunities that are relevant to the objective and supported by literal evidence snippets from the source."
+    "## Evidence discipline",
+    promptAssets.evidencePrompt,
+    "<objective>",
+    `title: ${objective.title}`,
+    `query: ${objective.query}`,
+    `profile: ${objective.profile}`,
+    `preferred_geography: ${objective.geography}`,
+    `sectors: ${sectorText}`,
+    `constraints: ${constraintText}`,
+    "</objective>",
+    "<source>",
+    `label: ${source.label}`,
+    `type: ${source.sourceType}`,
+    `url: ${source.url}`,
+    "</source>",
+    "Only include candidates that are relevant to the objective and supported by literal evidence snippets from the source."
   ].join("\n\n");
 }

@@ -1,35 +1,46 @@
 # Open Web Evolutionary Search
 
-Codex-Native Open Web Evolutionary Search turns messy public web pages into ranked, evidence-backed opportunities. This hackathon submission applies that system to one concrete wedge: startup opportunity discovery.
+Codex-Native Open Web Evolutionary Search turns messy public web pages into ranked, evidence-backed candidate shortlists. The product applies an evolutionary search paradigm to the web itself: objective, expand, select, review, shortlist. This hackathon submission applies that loop to one concrete first wedge: startup program search across grants, cloud credits, and accelerators.
 
 ## Executive Summary
 
-This repo is a serious venture-style prototype for finding startup grants, cloud credit programs, and accelerators across the open web. Codex app-server is the primary control plane, TinyFish is the live web execution layer, and the product returns a shortlist with evidence, score breakdowns, open questions, and next actions instead of a pile of tabs.
+This repo is a serious venture-style prototype of an open-web evolutionary search loop. Codex app-server is the primary control plane, TinyFish is the live web execution layer, and the current demo applies the loop to startup program search. Instead of a pile of tabs, the product returns a shortlist with evidence, score breakdowns, open questions, review notes, and next actions.
 
 The submission is intentionally optimized for pairwise judging:
 
 - one completed pinned single-source live proof run for credibility and magic
 - one deterministic replay walkthrough for clarity and reliability
-- one crisp PMF wedge: opportunity discovery for startups
+- one crisp PMF wedge: startup program search
+
+## Not A Standard Research Agent
+
+A standard deep research or web search agent usually browses, summarizes, and returns notes. Open Web Evolutionary Search is different: it treats the web as a candidate space to search, normalize, rank, review, and shortlist.
+
+| Standard research agent | Open Web Evolutionary Search |
+|---|---|
+| returns notes or an answer | returns a comparable candidate shortlist |
+| page-by-page browsing | candidate-space expansion across sources |
+| opaque synthesis | explicit score breakdown plus uncertainty |
+| one-shot response | loop: objective -> expand -> select -> review -> shortlist |
 
 ## Why It Matters
 
-Founders still discover many high-value opportunities manually across fragmented web pages, stale lists, and application portals. This product compresses that work into an inspectable shortlist that is easier to trust, easier to act on, and easier to demo.
+Teams still solve messy, high-value search problems manually across fragmented web pages, stale lists, and application portals. This product compresses that work into an inspectable shortlist that is easier to trust, easier to act on, and easier to generalize across domains. The hackathon demo uses startup programs because the wedge is legible, urgent, and venture-relevant.
 
 ## Why TinyFish + OpenAI Are Core
 
 - OpenAI Codex app-server runs the search and review loop with explicit kickoff and review turns.
 - TinyFish executes on the live web and returns structured extraction results from messy sources.
-- Together they turn the open web into a search surface rather than a browsing chore.
+- Together they turn the open web into an evolutionary search surface rather than a browsing chore.
 
 ## Submission Snapshot
 
-- Wedge: startup opportunity discovery
+- First wedge: startup program search
 - Control plane: Codex app-server
 - Live layer: TinyFish
 - Flagship demo: deterministic replay in the web UI
 - Credibility artifact: one completed pinned single-source live proof run
-- Output: evidence-backed ranking, open questions, review, and exportable dossier
+- Output: evidence-backed ranking, open questions, review, and a consultant-style dossier
 
 ## Verification Status
 
@@ -50,32 +61,36 @@ npm start
 
 Open [http://127.0.0.1:4317](http://127.0.0.1:4317).
 
+For the live TinyFish proof, start the app with `OWES_TINYFISH_API_KEY=...` and confirm `GET /v1/providers/status` reports `"tinyfishApiConfigured": true` before the demo.
+
 ## Try it with Codex
 
-This repo includes a repo-local skill for the visual judge demo at `.agents/skills/owes-judge-demo/`. In Codex, invoke it by starting your prompt with `$owes-judge-demo`.
+This repo includes a repo-local skill for the visual judge demo at `.agents/skills/owes-judge-demo/`. In Codex, invoke it by starting your prompt with `$owes-judge-demo`. Inside the Codex macOS app, the preferred path is a screenshot-backed walkthrough from the same web UI so the judge stays in one surface and the demo leaves persistent visual artifacts. Headed local browser mode is optional for rehearsal or explicit operator preference.
 
 Use this one-line prompt:
 
 ```text
-$owes-judge-demo Run the visual judge demo for this repo in the web UI: verify the app is running, do the Live TinyFish Proof first, then the Judge-Safe Replay, and narrate the ranked evidence-backed shortlist.
+$owes-judge-demo Run the visual judge demo for this repo in the Codex macOS app as a screenshot-backed walkthrough from the web UI: verify the app is running, preflight TinyFish status, do the Live TinyFish Proof first, then the Judge-Safe Replay, capture step-by-step visuals, and narrate the ranked evidence-backed shortlist.
 ```
 
 Replay-only fallback:
 
 ```text
-$owes-judge-demo Run the replay-only visual judge demo for this repo in the web UI: verify the app is running, skip live proof if unavailable, do the Judge-Safe Replay, and narrate the ranked evidence-backed shortlist.
+$owes-judge-demo Run the replay-only visual judge demo for this repo in the Codex macOS app as a screenshot-backed walkthrough from the web UI: verify the app is running, skip live proof if unavailable, do the Judge-Safe Replay, capture step-by-step visuals, and narrate the ranked evidence-backed shortlist.
 ```
 
-This skill is intended for cloned-repo users and judges/operators. It keeps the demo on the primary web UI path and avoids drifting into operator-only controls.
+This skill is intended for cloned-repo users and judges/operators. It keeps the demo on the primary web UI path, avoids drifting into operator-only controls, and reduces operator risk by defaulting to one judged surface.
 
 ## Judge Demo Path
 
 Preferred operator path:
 
-1. Use the `$owes-judge-demo` skill so the app is verified first and the demo stays on the intended visual flow.
-2. In the web UI, click `Run Live TinyFish Proof`.
-3. Then click `Run Judge-Safe Replay`.
-4. Show the ranked shortlist, evidence, `Review Shortlist`, and `Export Dossier`.
+1. Use the `$owes-judge-demo` skill inside Codex so the app is verified first and the demo stays on the intended visual flow.
+2. Keep the walkthrough inside the Codex macOS app with step-by-step screenshots from the same web UI.
+3. Preflight `GET /v1/providers/status` if you intend to show the live proof.
+4. In the web UI, click `Run Live TinyFish Proof`.
+5. Then click `Run Judge-Safe Replay`.
+6. Show the ranked shortlist, evidence, `Review Shortlist`, and `Export Dossier`.
 
 Manual CLI recovery surface:
 

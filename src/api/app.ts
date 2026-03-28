@@ -6,6 +6,7 @@ import { ZodError } from "zod";
 
 import { config } from "../core/config.js";
 import { objectiveInputSchema, runModeSchema } from "../core/types.js";
+import { buildHtmlExportReport } from "../services/pipeline.js";
 import { RunService } from "../services/run-service.js";
 
 export function createApp(service = new RunService()) {
@@ -89,8 +90,19 @@ export function createApp(service = new RunService()) {
 
   app.get("/v1/exports/:runId.md", async (request, reply) => {
     try {
-      const body = await service.exportRun((request.params as { runId: string }).runId);
+      const runId = (request.params as { runId: string }).runId;
+      const body = await service.exportRun(runId);
+      const run = await service.getRun(runId);
+      if (!run) {
+        return reply.status(404).send({ error: "not_found" });
+      }
+      const query = request.query as { view?: string } | undefined;
+      if (query?.view === "report") {
+        reply.header("content-type", "text/html; charset=utf-8");
+        return buildHtmlExportReport(run);
+      }
       reply.header("content-type", "text/markdown; charset=utf-8");
+      reply.header("content-disposition", `attachment; filename="${runId}-dossier.md"`);
       return body;
     } catch (error) {
       return reply.status(404).send({ error: "not_found", message: String(error) });

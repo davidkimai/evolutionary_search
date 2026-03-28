@@ -268,52 +268,99 @@ export function normalizeAndRank(runId: string, objective: Objective, results: P
 }
 
 export function buildMarkdownExport(run: RunRecord): ExportRecord {
+  const topOpportunity = run.opportunities[0] ?? null;
+  const scopeNote = buildScopeNote(run);
+  const sourceLabels = uniqueStrings(run.artifacts.map((artifact) => artifact.sourceLabel));
   const lines = [
     `# ${run.objective.title}`,
     "",
-    `- Run ID: ${run.runId}`,
-    `- Mode: ${run.mode}`,
-    `- Status: ${run.status}`,
-    `- Objective query: ${run.objective.query}`,
+    `Prepared by: Open Web Evolutionary Search`,
+    `Prepared on: ${formatReportTimestamp(run.updatedAt)}`,
+    `Run ID: ${run.runId}`,
+    "",
+    "## Executive Summary",
+    topOpportunity
+      ? `The strongest current candidate for this search is **${topOpportunity.title}** from **${topOpportunity.sourceName}**. It ranked first because ${topOpportunity.fitReason}.`
+      : "No ranked candidates were produced for this run.",
+    "The product is the evolutionary search loop itself: objective in, web candidates expanded and scored, review applied, shortlist out.",
+    `This run demonstrates the first wedge, startup opportunity search, against a broader open-web evolutionary search architecture.`,
+    topOpportunity?.applicationLink
+      ? `Recommended next step: review **${topOpportunity.title}** and follow the application path at ${topOpportunity.applicationLink}.`
+      : "Recommended next step: inspect the shortlist and confirm the next candidate action manually.",
+    scopeNote,
+    "",
+    "## Search Brief",
+    `- Objective: ${run.objective.query}`,
     `- Profile: ${run.objective.profile}`,
     `- Geography: ${run.objective.geography}`,
+    `- Mode: ${run.mode}`,
+    `- Status: ${run.status}`,
+    `- Source set: ${sourceLabels.length > 0 ? sourceLabels.join(", ") : "No sources recorded"}`,
+    `- Candidate count: ${run.opportunities.length}`,
     "",
-    "## Ranked Opportunities"
+    "## Ranked Shortlist",
+    "",
+    "| Rank | Candidate | Source | Score | Confidence | Value | Next action |",
+    "| --- | --- | --- | --- | --- | --- | --- |"
   ];
 
   for (const [index, opportunity] of run.opportunities.entries()) {
-    lines.push(`\n### ${index + 1}. ${opportunity.title}`);
+    lines.push(`| ${index + 1} | ${escapeMarkdownCell(opportunity.title)} | ${escapeMarkdownCell(opportunity.sourceName)} | ${opportunity.weightedScore.toFixed(3)} | ${opportunity.confidence.toFixed(2)} | ${escapeMarkdownCell(opportunity.rewardValueText ?? "Not stated")} | ${escapeMarkdownCell(opportunity.applicationLink ?? "Inspect source")} |`);
+  }
+
+  for (const [index, opportunity] of run.opportunities.entries()) {
+    lines.push("");
+    lines.push(`## ${index + 1}. ${opportunity.title}`);
     lines.push(`- Source: ${opportunity.sourceName}`);
     lines.push(`- URL: ${opportunity.sourceUrl}`);
+    lines.push(`- Fit summary: ${opportunity.fitReason}`);
     lines.push(`- Score: ${opportunity.weightedScore.toFixed(3)}`);
-    lines.push(`- Fit: ${opportunity.fitReason}`);
     lines.push(`- Confidence: ${opportunity.confidence.toFixed(2)}`);
     if (opportunity.rewardValueText) {
-      lines.push(`- Value: ${opportunity.rewardValueText}`);
+      lines.push(`- Value signal: ${opportunity.rewardValueText}`);
     }
     if (opportunity.deadlineText) {
-      lines.push(`- Deadline: ${opportunity.deadlineText}`);
+      lines.push(`- Timing signal: ${opportunity.deadlineText}`);
     }
     if (opportunity.applicationLink) {
-      lines.push(`- Apply: ${opportunity.applicationLink}`);
+      lines.push(`- Next action: ${opportunity.applicationLink}`);
     }
-    lines.push(`- Evidence:`);
+    lines.push("- Evidence");
     for (const snippet of opportunity.evidenceSnippets) {
       lines.push(`  - ${snippet}`);
     }
     if (opportunity.uncertaintyNotes.length > 0) {
-      lines.push(`- Uncertainty:`);
+      lines.push("- Open Questions");
       for (const note of opportunity.uncertaintyNotes) {
         lines.push(`  - ${note}`);
       }
     }
-    lines.push(`- Score breakdown:`);
-    lines.push(`  - profile_fit: ${opportunity.scoreBreakdown.profile_fit.toFixed(2)}`);
-    lines.push(`  - strategic_relevance: ${opportunity.scoreBreakdown.strategic_relevance.toFixed(2)}`);
-    lines.push(`  - reward_value: ${opportunity.scoreBreakdown.reward_value.toFixed(2)}`);
-    lines.push(`  - deadline_urgency: ${opportunity.scoreBreakdown.deadline_urgency.toFixed(2)}`);
-    lines.push(`  - application_feasibility: ${opportunity.scoreBreakdown.application_feasibility.toFixed(2)}`);
-    lines.push(`  - evidence_confidence: ${opportunity.scoreBreakdown.evidence_confidence.toFixed(2)}`);
+    lines.push("- Why It Ranked Here");
+    lines.push(`  - Profile Fit: ${opportunity.scoreBreakdown.profile_fit.toFixed(2)}`);
+    lines.push(`  - Strategic Relevance: ${opportunity.scoreBreakdown.strategic_relevance.toFixed(2)}`);
+    lines.push(`  - Reward Value: ${opportunity.scoreBreakdown.reward_value.toFixed(2)}`);
+    lines.push(`  - Deadline Urgency: ${opportunity.scoreBreakdown.deadline_urgency.toFixed(2)}`);
+    lines.push(`  - Application Feasibility: ${opportunity.scoreBreakdown.application_feasibility.toFixed(2)}`);
+    lines.push(`  - Evidence Confidence: ${opportunity.scoreBreakdown.evidence_confidence.toFixed(2)}`);
+  }
+
+  if (run.appServer.lastReview) {
+    lines.push("");
+    lines.push("## Codex Review");
+    lines.push(run.appServer.lastReview);
+  }
+
+  lines.push("");
+  lines.push("## Method");
+  lines.push("- The system runs an open-web evolutionary search loop: objective, expand, select, review, shortlist.");
+  lines.push("- TinyFish performs live extraction on the source pages; Codex app-server owns orchestration and review.");
+  lines.push("- Only evidence-backed candidates are surfaced; unknowns remain explicit.");
+  lines.push("- Ranking is decomposable across profile fit, strategic relevance, reward value, deadline urgency, application feasibility, and evidence confidence.");
+
+  lines.push("");
+  lines.push("## Appendix: Recent Event Trail");
+  for (const event of run.events.slice(-10)) {
+    lines.push(`- ${formatReportTimestamp(event.at)} · ${event.type} · ${event.message}`);
   }
 
   return {
@@ -323,4 +370,366 @@ export function buildMarkdownExport(run: RunRecord): ExportRecord {
     body: lines.join("\n"),
     createdAt: nowIso()
   };
+}
+
+export function buildHtmlExportReport(run: RunRecord): string {
+  const topOpportunity = run.opportunities[0] ?? null;
+  const sourceLabels = uniqueStrings(run.artifacts.map((artifact) => artifact.sourceLabel));
+  const scopeNote = buildScopeNote(run);
+  const rawMarkdownHref = `/v1/exports/${run.runId}.md`;
+
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${escapeHtml(run.objective.title)} Report</title>
+    <style>
+      :root {
+        --bg: #f4f1ea;
+        --panel: #ffffff;
+        --ink: #162025;
+        --muted: #5c6870;
+        --line: rgba(22, 32, 37, 0.14);
+        --accent: #0d5c63;
+        --accent-soft: #e7f1f2;
+        --shadow: 0 24px 48px rgba(22, 32, 37, 0.08);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: linear-gradient(180deg, #faf8f3 0%, var(--bg) 100%);
+        color: var(--ink);
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+      }
+      .report-shell {
+        width: min(1100px, calc(100vw - 32px));
+        margin: 0 auto;
+        padding: 28px 0 64px;
+      }
+      .topbar,
+      .section,
+      .opportunity-card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+      }
+      .topbar {
+        padding: 28px 32px;
+        margin-bottom: 18px;
+      }
+      .eyebrow {
+        margin: 0 0 10px;
+        color: var(--accent);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+      h1, h2, h3 {
+        font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+        margin: 0;
+      }
+      h1 {
+        font-size: clamp(32px, 5vw, 54px);
+        line-height: 0.96;
+        max-width: 12ch;
+      }
+      .lede {
+        max-width: 72ch;
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.6;
+      }
+      .meta-grid,
+      .summary-grid,
+      .opportunity-grid {
+        display: grid;
+        gap: 14px;
+      }
+      .meta-grid,
+      .summary-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        margin-top: 18px;
+      }
+      .metric,
+      .summary-card {
+        padding: 16px 18px;
+        border-radius: 18px;
+        background: #fbfaf6;
+        border: 1px solid var(--line);
+      }
+      .metric strong,
+      .summary-card strong {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .metric span {
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .section {
+        padding: 24px 28px;
+        margin-top: 18px;
+      }
+      .section h2 {
+        margin-bottom: 16px;
+        font-size: 28px;
+      }
+      .note {
+        margin-top: 14px;
+        padding: 14px 16px;
+        border-left: 4px solid var(--accent);
+        background: var(--accent-soft);
+        border-radius: 14px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th, td {
+        padding: 12px 10px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+      }
+      .opportunity-grid {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      }
+      .opportunity-card {
+        padding: 22px;
+      }
+      .opportunity-card h3 {
+        margin-bottom: 8px;
+        font-size: 24px;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      ul {
+        margin: 10px 0 0;
+        padding-left: 20px;
+      }
+      .score-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+      .score-chip {
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: #f5f7f8;
+        border: 1px solid var(--line);
+      }
+      .score-chip strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--muted);
+      }
+      .report-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 16px;
+      }
+      .report-actions a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 16px;
+        border-radius: 999px;
+        text-decoration: none;
+        color: white;
+        background: var(--accent);
+      }
+      .report-actions a.secondary {
+        color: var(--ink);
+        background: rgba(22, 32, 37, 0.08);
+      }
+      @media print {
+        body { background: white; }
+        .report-shell { width: 100%; padding: 0; }
+        .report-actions { display: none; }
+        .topbar, .section, .opportunity-card { box-shadow: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="report-shell">
+      <section class="topbar">
+        <p class="eyebrow">Open Web Evolutionary Search Report</p>
+        <h1>${escapeHtml(run.objective.title)}</h1>
+        <p class="lede">${escapeHtml(topOpportunity
+          ? `Recommendation memo for the current search. The strongest candidate is ${topOpportunity.title}, and the broader product remains the evolutionary search loop over messy web sources.`
+          : "Recommendation memo for the current search. No ranked candidates were produced in this run.")}</p>
+        <div class="report-actions">
+          <a href="${rawMarkdownHref}">Download Raw Markdown</a>
+          <a class="secondary" href="/">Back to App</a>
+        </div>
+        <div class="meta-grid">
+          <div class="metric"><strong>Prepared On</strong><span>${escapeHtml(formatReportTimestamp(run.updatedAt))}</span></div>
+          <div class="metric"><strong>Mode</strong><span>${escapeHtml(run.mode)}</span></div>
+          <div class="metric"><strong>Candidate Count</strong><span>${run.opportunities.length}</span></div>
+          <div class="metric"><strong>Source Set</strong><span>${escapeHtml(sourceLabels.length > 0 ? sourceLabels.join(", ") : "No sources recorded")}</span></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Executive Summary</h2>
+        <div class="summary-grid">
+          <div class="summary-card">
+            <strong>Search Objective</strong>
+            <div>${escapeHtml(run.objective.query)}</div>
+          </div>
+          <div class="summary-card">
+            <strong>Current Wedge</strong>
+            <div>Startup opportunity search on top of a generalized open-web evolutionary search loop.</div>
+          </div>
+          <div class="summary-card">
+            <strong>Lead Recommendation</strong>
+            <div>${escapeHtml(topOpportunity ? topOpportunity.title : "No recommendation available")}</div>
+          </div>
+        </div>
+        <p class="note">${escapeHtml(scopeNote)}</p>
+      </section>
+
+      <section class="section">
+        <h2>Search Brief</h2>
+        <table>
+          <tbody>
+            <tr><th>Profile</th><td>${escapeHtml(run.objective.profile)}</td></tr>
+            <tr><th>Geography</th><td>${escapeHtml(run.objective.geography)}</td></tr>
+            <tr><th>Mode</th><td>${escapeHtml(run.mode)}</td></tr>
+            <tr><th>Status</th><td>${escapeHtml(run.status)}</td></tr>
+            <tr><th>Search Loop</th><td>Objective -> Expand -> Select -> Review -> Shortlist</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Ranked Shortlist</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Candidate</th>
+              <th>Source</th>
+              <th>Score</th>
+              <th>Confidence</th>
+              <th>Value</th>
+              <th>Next Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${run.opportunities.map((opportunity, index) => `
+              <tr>
+                <td>${index + 1}</td>
+                <td>${escapeHtml(opportunity.title)}</td>
+                <td>${escapeHtml(opportunity.sourceName)}</td>
+                <td>${opportunity.weightedScore.toFixed(3)}</td>
+                <td>${opportunity.confidence.toFixed(2)}</td>
+                <td>${escapeHtml(opportunity.rewardValueText ?? "Not stated")}</td>
+                <td>${opportunity.applicationLink ? `<a href="${escapeHtml(opportunity.applicationLink)}" target="_blank" rel="noreferrer">Open application</a>` : "Inspect source"}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Recommendation Detail</h2>
+        <div class="opportunity-grid">
+          ${run.opportunities.map((opportunity, index) => `
+            <article class="opportunity-card">
+              <p class="eyebrow">Recommendation ${index + 1}</p>
+              <h3>${escapeHtml(opportunity.title)}</h3>
+              <p class="muted">${escapeHtml(opportunity.sourceName)} · score ${opportunity.weightedScore.toFixed(3)} · confidence ${opportunity.confidence.toFixed(2)}</p>
+              <p>${escapeHtml(opportunity.fitReason)}</p>
+              ${opportunity.applicationLink ? `<p><strong>Next action:</strong> <a href="${escapeHtml(opportunity.applicationLink)}" target="_blank" rel="noreferrer">Open application</a></p>` : ""}
+              <strong>Evidence</strong>
+              <ul>${opportunity.evidenceSnippets.map((snippet) => `<li>${escapeHtml(snippet)}</li>`).join("")}</ul>
+              ${opportunity.uncertaintyNotes.length > 0 ? `<strong>Open Questions</strong><ul>${opportunity.uncertaintyNotes.map((note) => `<li>${escapeHtml(note)}</li>`).join("")}</ul>` : ""}
+              <div class="score-grid">
+                ${renderHtmlScoreChip("Profile Fit", opportunity.scoreBreakdown.profile_fit)}
+                ${renderHtmlScoreChip("Strategic Relevance", opportunity.scoreBreakdown.strategic_relevance)}
+                ${renderHtmlScoreChip("Reward Value", opportunity.scoreBreakdown.reward_value)}
+                ${renderHtmlScoreChip("Deadline Urgency", opportunity.scoreBreakdown.deadline_urgency)}
+                ${renderHtmlScoreChip("Application Feasibility", opportunity.scoreBreakdown.application_feasibility)}
+                ${renderHtmlScoreChip("Evidence Confidence", opportunity.scoreBreakdown.evidence_confidence)}
+              </div>
+            </article>
+          `).join("")}
+        </div>
+      </section>
+
+      ${run.appServer.lastReview ? `
+        <section class="section">
+          <h2>Codex Review</h2>
+          <p class="lede">${escapeHtml(run.appServer.lastReview)}</p>
+        </section>
+      ` : ""}
+
+      <section class="section">
+        <h2>Method</h2>
+        <ul>
+          <li>TinyFish extracts from live web sources inside the current wedge.</li>
+          <li>Codex app-server owns orchestration, review, and loop discipline.</li>
+          <li>Only evidence-backed candidates are surfaced; missing facts remain explicit.</li>
+          <li>Ranking remains inspectable across profile fit, strategic relevance, reward value, timing, feasibility, and evidence confidence.</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>`;
+}
+
+function buildScopeNote(run: RunRecord): string {
+  if (run.mode === "live") {
+    return run.opportunities.length <= 2
+      ? "This live proof is intentionally narrow. It proves the live web path end to end; broader comparison is shown in replay."
+      : "This live proof is intentionally narrower than the replay flow. It proves the live web path while keeping the judge moment reliable.";
+  }
+  return "This replay run is the flagship demo path because it is deterministic, comparable, and safe to walk through under judge pressure.";
+}
+
+function formatReportTimestamp(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+  return new Intl.DateTimeFormat("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short"
+  }).format(date);
+}
+
+function escapeMarkdownCell(value: string): string {
+  return value.replaceAll("|", "\\|").replaceAll("\n", " ");
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function renderHtmlScoreChip(label: string, value: number): string {
+  return `<div class="score-chip"><strong>${escapeHtml(label)}</strong><span>${value.toFixed(2)}</span></div>`;
 }

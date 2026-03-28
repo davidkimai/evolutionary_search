@@ -37,11 +37,11 @@ Judge / User
 
 The phrase **Open Web Evolutionary Search** is better than **Opportunity Engine** for hackathon framing because it more accurately names the technical primitive and creates a stronger “aha” around search, selection, and refinement over a messy web corpus.
 
-However, **opportunity discovery** remains the best first wedge because it scores better on PMF, presentation clarity, and impact.
+However, **startup program search** remains the best first wedge because it scores better on PMF, presentation clarity, and impact.
 
 So the project should be presented as:
 
-> A codex-native evolutionary search system over the open web, with opportunity discovery as the first high-value wedge.
+> A codex-native evolutionary search system over the open web, with startup program search as the first high-value wedge.
 
 ## Why codex native first
 

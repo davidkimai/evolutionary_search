@@ -1,5 +1,5 @@
 interface:
   display_name: "OWES Judge Demo"
-  short_description: "Run the visual judge-safe demo for this repo."
-  default_prompt: "Use $owes-judge-demo to run the visual judge demo for this repo: verify the app is running, do the Live TinyFish Proof first, then the Judge-Safe Replay, and narrate the ranked evidence-backed shortlist."
+  short_description: "Run the self-contained screenshot-backed visual judge demo for this repo."
+  default_prompt: "Use $owes-judge-demo to run the self-contained visual judge demo for this repo inside the Codex macOS app as a screenshot-backed walkthrough from the web UI. Verify the app is running, preflight TinyFish status, do the Live TinyFish Proof first, then the Judge-Safe Replay, verify review and export, and narrate the ranked evidence-backed shortlist. Use headed browser mode only if explicitly requested."
   allow_implicit_invocation: false

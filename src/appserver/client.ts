@@ -374,15 +374,26 @@ function findReviewText(messages: JsonRpcMessage[], turnId: string): string | nu
 
 function buildKickoffPrompt(objective: Objective, mode: string): string {
   return [
-    "You are the Codex-native control plane for an Open Web Evolutionary Search run.",
-    "Respond concisely in exactly three bullets: objective, search wedge, and ranking lens.",
+    "You are the Codex-native control plane for one Open Web Evolutionary Search run.",
+    "# Task",
+    "Initialize this run by restating the decision objective, the current wedge, and the ranking lens.",
+    "# Constraints",
+    "- Do not browse.",
+    "- Do not inspect files or run tools.",
+    "- This turn is session initialization only.",
+    "- Keep the broader product frame separate from the current wedge.",
+    "# Run context",
     `Title: ${objective.title}`,
     `Query: ${objective.query}`,
     `Profile: ${objective.profile}`,
     `Geography: ${objective.geography}`,
     `Source types: ${objective.sourceTypes.join(", ")}`,
     `Mode: ${mode}`,
-    "Do not browse. This turn is only for session initialization."
+    "# Output",
+    "Return exactly these three bullets and nothing else:",
+    "- Objective: <one sentence>",
+    "- Current wedge: <one sentence>",
+    "- Ranking lens: <one sentence>"
   ].join("\n");
 }
 
@@ -400,11 +411,19 @@ function buildReviewPrompt(opportunities: Opportunity[]): string {
     .join("\n");
 
   return [
+    "# Task",
     "Review only the ranked shortlist below.",
-    "Do not inspect repository files, diffs, or the wider environment. Do not run tools.",
-    "Respond in exactly three bullets: evidence quality, ranking coherence, and uncertainty.",
-    "Base the review only on the provided scores, confidence, verification status, fit text, and evidence snippets.",
-    "Top opportunities:",
+    "# Constraints",
+    "- Do not inspect repository files, diffs, or the wider environment.",
+    "- Do not run tools.",
+    "- Base the review only on the provided scores, confidence, verification status, fit text, and evidence snippets.",
+    "# Output",
+    "Return exactly these three bullets and nothing else:",
+    "- Evidence quality: <assessment>",
+    "- Ranking coherence: <assessment>",
+    "- Uncertainty: <assessment>",
+    "If there is no critical issue, say so explicitly.",
+    "# Ranked shortlist",
     preview || "No opportunities were produced."
   ].join("\n\n");
 }

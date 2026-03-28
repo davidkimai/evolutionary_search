@@ -2,41 +2,30 @@
 
 ```text
 .
+├── .agents/
+│   └── skills/
+│       └── owes-judge-demo/
 ├── README.md
-├── docs/
-│   ├── harness/
-│   │   ├── AGENTS.md
-│   │   ├── .INDEX.md
-│   │   └── MASTER_PROMPT.md
-├── docs/
-│   ├── 00CURRENT_STATE.md
-│   ├── CONTINUITY.md
-│   ├── JUDGES.md
-│   ├── DEMO_SCRIPT.md
-│   └── CLAIMS_LEDGER.md
-├── apps/
-│   ├── api/
-│   ├── cli/
-│   ├── web/
-│   └── appserver-shell/
-├── packages/
-│   ├── core/
-│   ├── tinyfish-provider/
-│   ├── appserver-client/
-│   ├── schemas/
-│   └── prompt-assets/
-├── data/
-│   ├── replay/
-│   └── seeds/
-├── tests/
-└── promptdocs/
+├── domains/
+│   ├── architecture/
+│   ├── demo/
+│   └── product/
+├── fixtures/
+│   ├── live/
+│   └── replay/
+├── prompt-assets/
+├── public/
+├── src/
+└── package.json
 ```
 
-## Important addition
+## Shipped surfaces
 
-The repo now needs an **appserver-shell** or equivalent package because the project is codex native.
-That package owns:
-- app-server process management
-- event subscription
-- search session lifecycle
-- protocol adapters
+- `.agents/skills/owes-judge-demo/` contains the self-contained judge-demo skill.
+- `domains/demo/` contains the public demo and judging docs.
+- `domains/product/` contains the product and wedge framing docs.
+- `prompt-assets/`, `public/`, and `src/` contain the runtime prompt, shell, and server implementation.
+
+## Archived separately
+
+Internal build, planning, harness, continuity, and execution-state docs are archived outside the repo before finalization so the shipped repository stays product-facing.

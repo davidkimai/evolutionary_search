@@ -1,6 +1,7 @@
 const state = {
   runs: [],
-  selectedRunId: null
+  selectedRunId: null,
+  pendingAction: null
 };
 
 const runsList = document.getElementById('runsList');
@@ -21,6 +22,7 @@ runReplayButton.addEventListener('click', () => startReplayDemo());
 refreshButton.addEventListener('click', refreshRuns);
 reviewButton.addEventListener('click', reviewSelectedRun);
 
+renderActionButtons();
 refreshRuns();
 setInterval(refreshRuns, 5000);
 
@@ -29,7 +31,7 @@ async function refreshRuns() {
   const payload = await response.json();
   state.runs = payload.data ?? [];
   runCount.textContent = String(state.runs.length);
-  if (!state.selectedRunId && state.runs[0]) {
+  if (!state.selectedRunId && !state.pendingAction && state.runs[0]) {
     state.selectedRunId = state.runs[0].runId;
   }
   renderRuns();
@@ -57,26 +59,43 @@ async function handleFormSubmit(event) {
 }
 
 async function startRun(body, fallbackMessage) {
-  const response = await fetch('/v1/runs', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(body)
-  });
-  const payload = await response.json();
-  if (!response.ok) {
-    alert(payload.message ?? payload.error ?? fallbackMessage);
-    return null;
+  const previousSelectedRunId = state.selectedRunId;
+  state.selectedRunId = null;
+  renderRuns();
+  renderDetail();
+  try {
+    const response = await fetch('/v1/runs', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      state.selectedRunId = previousSelectedRunId;
+      renderRuns();
+      renderDetail();
+      alert(payload.message ?? payload.error ?? fallbackMessage);
+      return null;
+    }
+    state.selectedRunId = payload.run.runId;
+    await refreshRuns();
+    return payload.run;
+  } catch (error) {
+    state.selectedRunId = previousSelectedRunId;
+    renderRuns();
+    renderDetail();
+    throw error;
+  } finally {
+    clearPendingAction();
   }
-  state.selectedRunId = payload.run.runId;
-  await refreshRuns();
-  return payload.run;
 }
 
 async function startReplayDemo() {
+  setPendingAction('replay');
   await startRun({
     mode: 'replay',
     objective: {
-      title: 'AI startup opportunity search',
+      title: 'AI startup program search',
       query: 'AI startup credits and accelerator programs',
       profile: 'Seed-stage startup building AI developer tools with a small engineering team.',
       geography: 'Global',
@@ -90,10 +109,11 @@ async function startReplayDemo() {
 }
 
 async function startLiveProofDemo() {
+  setPendingAction('live');
   await startRun({
     mode: 'live',
     objective: {
-      title: 'AI startup live opportunity proof',
+      title: 'AI startup program live proof',
       query: 'AI startup cloud credit program with explicit benefits and application details',
       profile: 'Seed-stage startup building AI developer tools with a small engineering team.',
       geography: 'Global',
@@ -133,24 +153,49 @@ async function renderDetail() {
   const run = state.runs.find((item) => item.runId === state.selectedRunId);
   if (!run) {
     detailTitle.textContent = 'No run selected';
-    detailMeta.textContent = 'Run the live TinyFish proof or the judge-safe replay to inspect the shortlist.';
+    detailMeta.textContent = state.pendingAction
+      ? pendingMeta(state.pendingAction.kind)
+      : 'Run the live TinyFish proof or the judge-safe replay to inspect the evolutionary search loop.';
     detailBody.className = 'detail-body empty-state';
-    detailBody.textContent = 'Run the live proof or replay to see evidence, ranking, review, and export.';
+    detailBody.textContent = state.pendingAction
+      ? pendingMessage(state.pendingAction.kind)
+      : 'Run the live proof or replay to see the loop turn messy web sources into an evidence-backed shortlist and report.';
     exportLink.classList.add('disabled');
-    reviewButton.disabled = true;
+    renderActionButtons();
     return;
   }
 
   detailTitle.textContent = run.objective.title;
-  detailMeta.textContent = `${formatModeLabel(run)} · ${run.status} · ${run.opportunities.length} ranked opportunities`;
+  detailMeta.textContent = state.pendingAction
+    ? `${formatModeLabel(run)} · ${run.status} · ${run.opportunities.length} ranked opportunities · ${pendingMeta(state.pendingAction.kind)}`
+    : `${formatModeLabel(run)} · ${run.status} · ${run.opportunities.length} ranked opportunities`;
   detailBody.className = 'detail-body';
-  exportLink.href = `/v1/exports/${run.runId}.md`;
+  exportLink.href = `/v1/exports/${run.runId}.md?view=report`;
   exportLink.classList.remove('disabled');
-  reviewButton.disabled = !run.appServer?.threadId;
   const topOpportunity = run.opportunities[0] ?? null;
+  const pendingNotice = state.pendingAction
+    ? `
+      <div class="section-card pending-card">
+        <p class="eyebrow-like">Demo Status</p>
+        <h3>${escapeHtml(pendingTitle(state.pendingAction.kind))}</h3>
+        <p>${escapeHtml(pendingMessage(state.pendingAction.kind))}</p>
+      </div>
+    `
+    : '';
 
   const reviewNotice = run.appServer?.lastReview
     ? `<div class="section-card"><h3>Latest Review</h3><p>${escapeHtml(run.appServer.lastReview)}</p></div>`
+    : '';
+  const failureNotice = run.status === 'failed'
+    ? `
+      <div class="section-card pending-card">
+        <p class="eyebrow-like">Recovery Path</p>
+        <h3>${escapeHtml(run.mode === 'live' ? 'Live proof blocked' : 'Run failed')}</h3>
+        <p>${escapeHtml(run.mode === 'live'
+          ? 'The live proof did not complete on this attempt. Keep the story fixed, note the blocker briefly, and continue with Judge-Safe Replay for the ranked evidence-backed walkthrough.'
+          : 'This run did not complete. Refresh once, then rerun the primary demo path rather than exploring custom controls.')}</p>
+      </div>
+    `
     : '';
 
   const topOpportunitySpotlight = topOpportunity
@@ -176,6 +221,8 @@ async function renderDetail() {
     : '';
 
   detailBody.innerHTML = `
+    ${pendingNotice}
+    ${failureNotice}
     ${topOpportunitySpotlight}
     <div class="section-card">
       <h3>Ranked Shortlist</h3>
@@ -194,17 +241,23 @@ async function renderDetail() {
       </div>
     </div>
   `;
+  renderActionButtons();
 }
 
 async function reviewSelectedRun() {
   if (!state.selectedRunId) return;
-  const response = await fetch(`/v1/runs/${state.selectedRunId}/review`, { method: 'POST' });
-  const payload = await response.json();
-  if (!response.ok) {
-    alert(payload.message ?? payload.error ?? 'Review failed.');
-    return;
+  setPendingAction('review');
+  try {
+    const response = await fetch(`/v1/runs/${state.selectedRunId}/review`, { method: 'POST' });
+    const payload = await response.json();
+    if (!response.ok) {
+      alert(payload.message ?? payload.error ?? 'Review failed.');
+      return;
+    }
+    await refreshRuns();
+  } finally {
+    clearPendingAction();
   }
-  await refreshRuns();
 }
 
 function renderOpportunity(opportunity) {
@@ -262,6 +315,74 @@ function formatModeLabel(run) {
     return 'live TinyFish proof';
   }
   return 'mock fallback';
+}
+
+function renderActionButtons() {
+  const run = state.runs.find((item) => item.runId === state.selectedRunId);
+  const hasReviewTarget = Boolean(
+    run?.appServer?.threadId &&
+    run?.status === 'completed' &&
+    (run?.opportunities?.length ?? 0) > 0
+  );
+  const pendingKind = state.pendingAction?.kind ?? null;
+
+  runLiveProofButton.disabled = Boolean(pendingKind);
+  runReplayButton.disabled = Boolean(pendingKind);
+  reviewButton.disabled = !hasReviewTarget || Boolean(pendingKind);
+
+  runLiveProofButton.textContent = pendingKind === 'live'
+    ? 'Starting Live TinyFish Proof...'
+    : 'Run Live TinyFish Proof';
+  runReplayButton.textContent = pendingKind === 'replay'
+    ? 'Starting Judge-Safe Replay...'
+    : 'Run Judge-Safe Replay';
+  reviewButton.textContent = pendingKind === 'review'
+    ? 'Reviewing Shortlist...'
+    : 'Review Shortlist';
+
+  runLiveProofButton.classList.toggle('is-pending', pendingKind === 'live');
+  runReplayButton.classList.toggle('is-pending', pendingKind === 'replay');
+  reviewButton.classList.toggle('is-pending', pendingKind === 'review');
+}
+
+function setPendingAction(kind) {
+  state.pendingAction = { kind };
+  renderActionButtons();
+  renderDetail();
+}
+
+function clearPendingAction() {
+  if (!state.pendingAction) return;
+  state.pendingAction = null;
+  renderActionButtons();
+  renderDetail();
+}
+
+function pendingTitle(kind) {
+  if (kind === 'live') {
+    return 'Starting Live TinyFish Proof';
+  }
+  if (kind === 'replay') {
+    return 'Starting Judge-Safe Replay';
+  }
+  return 'Reviewing Shortlist';
+}
+
+function pendingMeta(kind) {
+  if (kind === 'review') {
+    return 'review in progress';
+  }
+  return 'starting now';
+}
+
+function pendingMessage(kind) {
+  if (kind === 'live') {
+    return 'The live TinyFish proof has been triggered. Wait for the running state to appear and let the evolutionary search loop advance.';
+  }
+  if (kind === 'replay') {
+    return 'The judge-safe replay has been triggered. Wait for the ranked shortlist and report surface to load before clicking again.';
+  }
+  return 'The shortlist review is running now. Wait for the written review to appear before clicking again.';
 }
 
 function escapeHtml(value) {

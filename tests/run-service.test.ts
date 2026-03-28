@@ -19,8 +19,8 @@ describe("RunService", () => {
     expect(run.opportunities[0].evidenceSnippets.length).toBeGreaterThan(0);
 
     const markdown = await service.exportRun(run.runId);
-    expect(markdown).toContain("# AI startup opportunity search");
-    expect(markdown).toContain("## Ranked Opportunities");
+    expect(markdown).toContain("# AI startup program search");
+    expect(markdown).toContain("## Ranked Shortlist");
     expect(markdown).toContain("- Status: completed");
   });
 });

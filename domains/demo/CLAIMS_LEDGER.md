@@ -17,7 +17,7 @@ Interpretation rules:
 | Every surfaced recommendation includes evidence and a decomposable score breakdown | replay export, live export, API payloads, ranking pipeline, web shell | high | product, demo |
 | The system surfaces uncertainty notes instead of overstating certainty | replay run export and live run export both retain explicit uncertainty notes | medium | product, demo |
 | TinyFish live mode is implemented via async API plus batch polling, with CLI fallback | `src/providers/index.ts`, TinyFish async and batch docs, `/v1/providers/status` | medium | README |
-| A repo-scoped `$owes-judge-demo` skill exists to standardize the visual judge demo path | `.agents/skills/owes-judge-demo/SKILL.md`, `.agents/skills/owes-judge-demo/agents/openai.yaml`, README, demo docs | high | README, demo |
+| A repo-scoped `$owes-judge-demo` skill exists to standardize the visual judge demo path inside Codex, defaulting to a screenshot-backed walkthrough with headed mode as optional | `.agents/skills/owes-judge-demo/SKILL.md`, `.agents/skills/owes-judge-demo/agents/openai.yaml`, README, demo docs | high | README, demo |
 
 ## Replay-Verified Deterministic
 
@@ -43,6 +43,6 @@ Interpretation rules:
 
 | Claim to avoid | Why | Evidence |
 |---|---|---|
-| Broad multi-source live opportunity discovery is demo-safe | Live reliability was proven on a pinned single-source path, not on a broad live fanout | `fixtures/live/golden-live-aws-activate-summary.json`, `fixtures/live/tinyfish-live-yc-timeout-summary.json` |
+| Broad multi-source live startup-program search is demo-safe | Live reliability was proven on a pinned single-source path, not on a broad live fanout | `fixtures/live/golden-live-aws-activate-summary.json`, `fixtures/live/tinyfish-live-yc-timeout-summary.json` |
 | Replay is unnecessary now that live works once | Replay remains the stronger flagship demo because it is deterministic and shows a richer shortlist | `fixtures/replay/demo-opportunities.json`, `fixtures/replay/live-proof-aws-activate.json` |
-| The demo skill is full browser automation | The skill standardizes app checks and the intended visual path, but the judged experience is still the product web UI | `.agents/skills/owes-judge-demo/SKILL.md` |
+| The demo skill is a headed-browser-only experience | The default judged path is the screenshot-backed walkthrough inside Codex; headed mode is optional for rehearsal or explicit operator preference | `.agents/skills/owes-judge-demo/SKILL.md` |

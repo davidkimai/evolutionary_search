@@ -31,8 +31,4 @@ Ranking must be explicit, decomposable, and inspectable.
 
 ## Future upgrade
 
-Allow profile-specific presets:
-- startup mode
-- academic / research mode
-- nonprofit mode
-- tender / procurement mode
+Allow profile-specific presets for other web search spaces without changing the visible loop contract.

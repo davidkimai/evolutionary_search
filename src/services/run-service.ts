@@ -55,6 +55,7 @@ export class RunService {
     run.appServer.lastReview = review.reviewText;
     run.events.push(...review.events);
     run.updatedAt = nowIso();
+    run.exportRecord = null;
     return this.store.saveRun(run);
   }
 
@@ -71,7 +72,7 @@ export class RunService {
   async smokeReplay(): Promise<RunRecord> {
     return this.createObjectiveAndRun(
       {
-        title: "AI startup opportunity search",
+        title: "AI startup program search",
         query: "AI startup credits and accelerator programs",
         profile: "Seed-stage startup building AI developer tools with a small engineering team.",
         geography: "Global",
@@ -88,7 +89,7 @@ export class RunService {
   async smokeLiveProof(): Promise<RunRecord> {
     return this.createObjectiveAndRun(
       {
-        title: "AI startup live opportunity proof",
+        title: "AI startup program live proof",
         query: "AI startup cloud credit program with explicit benefits and application details",
         profile: "Seed-stage startup building AI developer tools with a small engineering team.",
         geography: "Global",

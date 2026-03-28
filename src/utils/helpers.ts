@@ -35,7 +35,7 @@ export async function ensureParentDir(filePath: string): Promise<void> {
 
 export async function writeJson(filePath: string, data: unknown): Promise<void> {
   await ensureParentDir(filePath);
-  const tempPath = `${filePath}.tmp`;
+  const tempPath = `${filePath}.${process.pid}.${crypto.randomUUID()}.tmp`;
   const body = `${JSON.stringify(data, null, 2)}\n`;
   await writeFile(tempPath, body, "utf8");
   await rename(tempPath, filePath);

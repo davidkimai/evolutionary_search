@@ -7,12 +7,14 @@ This is an internal translation from the official judging criteria to one concre
 Use the repo-local demo skill during judging:
 
 ```text
-$owes-judge-demo Run the visual judge demo for this repo in the web UI: verify the app is running, do the Live TinyFish Proof first, then the Judge-Safe Replay, and narrate the ranked evidence-backed shortlist.
+$owes-judge-demo Run the visual judge demo for this repo in the Codex macOS app as a screenshot-backed walkthrough from the web UI. Verify the app is running, preflight TinyFish status, do the Live TinyFish Proof first, then the Judge-Safe Replay, capture step-by-step visuals, verify review and export, and narrate the ranked evidence-backed shortlist. Use headed browser mode only if explicitly requested.
 ```
 
 Why this matters:
 
 - it standardizes the exact web UI path
+- it keeps the judge in one surface instead of splitting attention across windows
+- it leaves persistent visual artifacts behind for comparison and submission support
 - it reduces operator error
 - it keeps the demo on the primary buttons instead of operator-only controls
 - it makes the judged experience more comparable across runs
@@ -72,7 +74,7 @@ Line to use:
 ## 6. Impact & Relevance
 
 Visible proof:
-- startup opportunity discovery wedge
+- startup program search wedge
 - explicit apply link
 - evidence-backed shortlist
 - exportable dossier
@@ -91,7 +93,7 @@ Proof to emphasize:
 ### Most Likely to Be the Next Unicorn
 
 Proof to emphasize:
-- clear PMF wedge: startup opportunity discovery
+- clear PMF wedge: startup program search
 - immediate venture story: founders, startup programs, investors, incubators, grant operators
 
 ### Overall Top 3
@@ -109,12 +111,14 @@ Proof to emphasize:
 - `Why is the live path intentionally narrow?`
   - "Because the goal is one reliable magical moment, not a risky broad live benchmark."
 - `Why add a demo skill instead of just clicking around manually?`
-  - "Because it reduces operator error. It verifies the app, keeps the demo on the intended visual path, and preserves the same story under judge pressure."
+  - "Because it reduces operator error. It verifies the app, keeps the demo on the intended visual path, and preserves the same story under judge pressure in one surface."
 - `Where do TinyFish and OpenAI each matter here?`
   - "TinyFish executes on the live web; Codex app-server owns orchestration and the review loop."
+- `How is this different from a deep research agent or web search agent?`
+  - "Those systems usually browse and summarize. We turn the web into a candidate space, normalize results into comparable records, rank them with inspectable criteria, review the shortlist, and export a decision memo."
 - `What was actually built during the hackathon?`
   - "The judged scope is the integrated product path shown in the demo: Codex app-server control plane, TinyFish live proof, replay demo, ranking, review, export, and judge-facing shell."
 - `How do you handle pre-existing work disclosure?`
   - "Any reusable harness or scaffolding should be disclosed separately. We do not present that as the hackathon novelty."
 - `Why is this venture-scale?`
-  - "The wedge is concrete, urgent, and repeatable. The broader frame is open-web ranking for messy, high-value selection problems."
+  - "The wedge is concrete, urgent, and repeatable. The broader frame is open-web evolutionary search for messy, high-value selection problems."

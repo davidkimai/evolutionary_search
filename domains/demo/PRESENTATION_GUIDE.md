@@ -12,4 +12,4 @@
 - generic “AI agent” language
 
 ## Best final line
-"We turned the open web from a messy document heap into a live opportunity-resolution engine."
+"We turned the open web from a messy document heap into an evolutionary search loop that produces ranked, evidence-backed decisions."
